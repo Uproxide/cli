@@ -16,27 +16,13 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - name: "Windows"
-          id: win
-          os: ubuntu-latest
-          executable: 'geode.exe'
-          prebuild: 'sudo apt-get install gcc-mingw-w64-x86-64'
-          target: x86_64-pc-windows-gnu
-
-        - name: "macOS"
-          id: mac
-          os: macos-12
-          executable: 'geode'
-          prebuild: 'export OPENSSL_STATIC=1'
-          target: x86_64-apple-darwin
-
         - name: "Linux"
           id: linux
           os: ubuntu-latest
           executable: 'geode'
           # some stupid old ubuntu versions cant install libssl3
           prebuild: 'export OPENSSL_STATIC=1'
-          target: x86_64-unknown-linux-gnu
+          target: aarch64-unknown-linux-gnu
 
     name: Build ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
