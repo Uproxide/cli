@@ -16,11 +16,16 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - name: "Linux"
-          id: linux
+        - name: "Linux x86_64"
+          id: linux-x86_64
           os: ubuntu-latest
           executable: 'geode'
-          # some stupid old ubuntu versions cant install libssl3
+          prebuild: 'export OPENSSL_STATIC=1'
+          target: x86_64-unknown-linux-gnu
+        - name: "Linux aarch64"
+          id: linux-aarch64
+          os: ubuntu-latest
+          executable: 'geode'
           prebuild: 'export OPENSSL_STATIC=1'
           target: aarch64-unknown-linux-gnu
 
@@ -76,25 +81,17 @@ jobs:
       with:
         path: ${{ github.workspace }}/artifacts
 
-    # TODO: change when this is fixed https://github.com/actions/download-artifact/issues/143
-
-    - name: Zip Windows Artifacts
+    - name: Zip Linux x86_64 Artifacts
       uses: vimtor/action-zip@v1.2
       with:
-        files: artifacts/geode-cli-win/geode.exe
-        dest: artifacts/geode-cli-${{ steps.ref.outputs.hash }}-win.zip
+        files: artifacts/geode-cli-linux-x86_64/geode
+        dest: artifacts/geode-cli-${{ steps.ref.outputs.hash }}-linux-x86_64.zip
 
-    - name: Zip macOS Artifacts
+    - name: Zip Linux aarch64 Artifacts
       uses: vimtor/action-zip@v1.2
       with:
-        files: artifacts/geode-cli-mac/geode
-        dest: artifacts/geode-cli-${{ steps.ref.outputs.hash }}-mac.zip
-
-    - name: Zip Linux Artifacts
-      uses: vimtor/action-zip@v1.2
-      with:
-        files: artifacts/geode-cli-linux/geode
-        dest: artifacts/geode-cli-${{ steps.ref.outputs.hash }}-linux.zip
+        files: artifacts/geode-cli-linux-aarch64/geode
+        dest: artifacts/geode-cli-${{ steps.ref.outputs.hash }}-linux-aarch64.zip
 
     - name: Update Development Release
       uses: andelf/nightly-release@main
